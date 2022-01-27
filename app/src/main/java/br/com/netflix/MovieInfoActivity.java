@@ -63,9 +63,9 @@ public class MovieInfoActivity extends AppCompatActivity {
 
     void initRecycleView(){
         List<Movie> movies = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            movies.add(new Movie(R.drawable.movie));
-        }
+//        for (int i = 0; i < 30; i++) {
+//            movies.add(new Movie(R.drawable.movie));
+//        }
         RecyclerView recyclerView = findViewById(R.id.movie_info_recycleview);
         recyclerView.setAdapter(new MovieSimilarAdapter(movies));
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));

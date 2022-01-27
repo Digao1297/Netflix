@@ -16,8 +16,11 @@ import java.util.List;
 
 import br.com.netflix.model.Category;
 import br.com.netflix.model.Movie;
+import br.com.netflix.util.CategoryTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CategoryTask.CategoryLoader {
+
+    private MainAdapter mainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,29 +28,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         _recycleViewInit();
+
+        CategoryTask categoryTask = new CategoryTask(this);
+        categoryTask.execute("https://tiagoaguiar.co/api/netflix/home");
+        categoryTask.setCategoryLoader(this);
     }
 
     private void _recycleViewInit() {
         RecyclerView recyclerView = findViewById(R.id.recycler_view_main);
-
-
         List<Category> categories = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            List<Movie> movies = new ArrayList<>();
-            for (int j = 0; j < 30; j++) {
-//                movies.add(new Movie(R.drawable.movie));
-                movies.add(new Movie());
-            }
-            categories.add(new Category("Category " + i, movies));
-        }
 
-
-        MainAdapter movieAdapter = new MainAdapter(categories);
+         this.mainAdapter = new MainAdapter(categories);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        recyclerView.setAdapter(movieAdapter);
+        recyclerView.setAdapter(this.mainAdapter);
 
     }
 
+    @Override
+    public void onRsult(List<Category> categories) {
+        this.mainAdapter.setCategories(categories);
+        this.mainAdapter.notifyDataSetChanged();
+    }
 
     private static class CategoryHolder extends RecyclerView.ViewHolder {
 
@@ -63,10 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
     private class MainAdapter extends RecyclerView.Adapter<CategoryHolder> {
 
-        private final List<Category> categories;
+        private List<Category> categories;
 
         public MainAdapter(List<Category> categories) {
             this.categories = categories;
+        }
+
+        public void setCategories(List<Category> categories) {
+            this.categories.clear();
+            this.categories.addAll(categories);
         }
 
         @NonNull

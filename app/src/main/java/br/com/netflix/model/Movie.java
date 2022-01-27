@@ -1,17 +1,16 @@
 package br.com.netflix.model;
 
 public class Movie {
-
-    private int coverUrl;
+    private String coverUrl;
 
     public Movie() {
     }
 
-    public Movie(int coverUrl) {
+    public Movie( String coverUrl) {
         this.coverUrl = coverUrl;
     }
 
-    public int getCoverUrl() {
+    public String getCoverUrl() {
         return coverUrl;
     }
 }
