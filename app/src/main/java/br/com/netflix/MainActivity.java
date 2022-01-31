@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.List;
 import br.com.netflix.model.Category;
 import br.com.netflix.model.Movie;
 import br.com.netflix.util.CategoryTask;
+import br.com.netflix.util.ImageDownloaderTask;
 
 public class MainActivity extends AppCompatActivity implements CategoryTask.CategoryLoader {
 
@@ -38,14 +42,14 @@ public class MainActivity extends AppCompatActivity implements CategoryTask.Cate
         RecyclerView recyclerView = findViewById(R.id.recycler_view_main);
         List<Category> categories = new ArrayList<>();
 
-         this.mainAdapter = new MainAdapter(categories);
+        this.mainAdapter = new MainAdapter(categories);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(this.mainAdapter);
 
     }
 
     @Override
-    public void onRsult(List<Category> categories) {
+    public void onResult(List<Category> categories) {
         this.mainAdapter.setCategories(categories);
         this.mainAdapter.notifyDataSetChanged();
     }
@@ -99,14 +103,18 @@ public class MainActivity extends AppCompatActivity implements CategoryTask.Cate
     private static class MovieHolder extends RecyclerView.ViewHolder {
 
         private final ImageView imageViewCover;
+        private final ProgressBar progressBar;
 
-        public MovieHolder(@NonNull View itemView) {
+        public MovieHolder(@NonNull View itemView, final OnItemClickListener onItemClickListener) {
             super(itemView);
             imageViewCover = itemView.findViewById(R.id.image_view_cover);
+            progressBar = itemView.findViewById(R.id.movie_item_progress);
+
+            itemView.setOnClickListener((view) -> onItemClickListener.onClick(getAdapterPosition()));
         }
     }
 
-    private class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
+    private class MovieAdapter extends RecyclerView.Adapter<MovieHolder> implements OnItemClickListener {
 
         private final List<Movie> movies;
 
@@ -114,21 +122,39 @@ public class MainActivity extends AppCompatActivity implements CategoryTask.Cate
             this.movies = movies;
         }
 
+        @Override
+        public void onClick(int position) {
+            Intent intent = new Intent(MainActivity.this, MovieInfoActivity.class);
+            int id = movies.get(position).getId();
+
+            if (id > 0 && id <= 4) {
+                intent.putExtra("id", id);
+                startActivity(intent);
+            }
+        }
+
         @NonNull
         @Override
         public MovieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new MovieHolder(getLayoutInflater().inflate(R.layout.movie_item, parent, false));
+            View view = getLayoutInflater().inflate(R.layout.movie_item, parent, false);
+            return new MovieHolder(view, this);
         }
 
         @Override
         public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
             Movie movie = movies.get(position);
-//            holder.imageViewCover.setImageResource(movie.getCoverUrl());
+            new ImageDownloaderTask(holder.progressBar, holder.imageViewCover, null, false).execute(movie.getCoverUrl());
         }
 
         @Override
         public int getItemCount() {
             return movies.size();
         }
+
+
+    }
+
+    interface OnItemClickListener {
+        void onClick(int position);
     }
 }

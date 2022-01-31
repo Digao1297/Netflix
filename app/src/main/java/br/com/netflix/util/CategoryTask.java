@@ -42,7 +42,7 @@ public class CategoryTask extends AsyncTask<String, Void, List<Category>> {
         Context context = this.context.get();
 
         if (context != null) {
-            dialog = ProgressDialog.show(context, "Loading", "", true);
+            dialog = ProgressDialog.show(context, "Carregando", "", true);
         }
     }
 
@@ -83,8 +83,8 @@ public class CategoryTask extends AsyncTask<String, Void, List<Category>> {
         super.onPostExecute(categories);
         dialog.dismiss();
 
-        if(categoryLoader != null)
-            categoryLoader.onRsult(categories);
+        if (categoryLoader != null)
+            categoryLoader.onResult(categories);
     }
 
     private String toString(InputStream is) throws IOException {
@@ -112,7 +112,10 @@ public class CategoryTask extends AsyncTask<String, Void, List<Category>> {
             for (int j = 0; j < movieArray.length(); j++) {
                 JSONObject movieJson = movieArray.getJSONObject(j);
 
-                Movie movie = new Movie(movieJson.getString("cover_url"));
+                Movie movie = new Movie(
+                        movieJson.getInt("id"),
+                        movieJson.getString("cover_url")
+                );
                 movies.add(movie);
             }
             Category category = new Category(title, movies);
@@ -123,6 +126,6 @@ public class CategoryTask extends AsyncTask<String, Void, List<Category>> {
     }
 
     public interface CategoryLoader {
-        void onRsult(List<Category> categories);
+        void onResult(List<Category> categories);
     }
 }

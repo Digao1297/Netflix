@@ -35,13 +35,27 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/movie_info_play_button"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:src="@drawable/play_button"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/movie_info_cover"
             app:layout_constraintEnd_toEndOf="@+id/movie_info_cover"
             app:layout_constraintStart_toStartOf="@+id/movie_info_cover"
             app:layout_constraintTop_toTopOf="@+id/movie_info_cover" />
+
+        <ProgressBar
+            android:id="@+id/movie_info_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/movie_info_cover"
+            app:layout_constraintEnd_toEndOf="@+id/movie_info_cover"
+            app:layout_constraintStart_toStartOf="@+id/movie_info_cover"
+            app:layout_constraintTop_toTopOf="@+id/movie_info_cover"
+            android:visibility="invisible"
+            android:indeterminateTint="@android:color/white"
+            />
 
         <TextView
             android:id="@+id/movie_info_title"
