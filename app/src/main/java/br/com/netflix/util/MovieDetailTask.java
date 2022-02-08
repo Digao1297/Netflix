@@ -13,7 +13,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +109,7 @@ public class MovieDetailTask extends AsyncTask<String, Void, MovieDetail> {
             ));
         }
         return new MovieDetail(
-                new Movie(id, title, desc, cast, coverUrl),
+                id, coverUrl, title, desc, cast,
                 movies
         );
     }

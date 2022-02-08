@@ -8,7 +8,7 @@
     >
 
     <ImageView
-        android:id="@+id/image_view_cover"
+        android:id="@+id/movie_similar_cover"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <ProgressBar
-        android:id="@+id/movie_info_progress"
+        android:id="@+id/movie_similar_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
